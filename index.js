@@ -1,23 +1,35 @@
 const express = require('express');
 const cors = require('cors');
-const routes = require("./routes.js");
+const cookieParser = require('cookie-parser');
+const routes = require("./routes");
 const mongoose = require('mongoose');
 
-const app = express();
+( async () => {
+    try {
+        require("dotenv").config();
+        const PORT = process.env.PORT ||5000;
 
-app.use(cors({
-    preflightContinue: true,
-    origin: "*"
-}));
+        await mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true });
 
-app.use(express.json());
+        const app = express();
 
-app.use("/api/", routes);
+        app.disable('x-powered-by');
 
-require("dotenv").config();
+        app.use(cors({
+                preflightContinue: true,
+            origin: "*"
+        }));
 
-const PORT = process.env.PORT || 5000;
+        app.use(express.urlencoded({ extended: true }));
+        app.use(express.json());
+        app.use(cookieParser());
 
-mongoose.connect(process.env.MONGO_URL)
-    .then(res => app.listen(PORT, () => console.log(`server is running on http://localhost:${PORT}`)))
-    .catch(err => console.log(err));
+        app.use("/api/user/", routes.userRoutes);
+
+        const server = require("http").createServer(app);
+
+        server.listen(PORT, () => console.log(`server is running on port: ${PORT}`));
+    } catch(err) {
+        console.log(err);
+    }
+})();
