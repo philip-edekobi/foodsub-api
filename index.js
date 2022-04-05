@@ -9,7 +9,7 @@ const MongoStore = require("connect-mongo");
 ( async () => {
     try {
         require("dotenv").config();
-        const PORT = process.env.PORT ||5000;
+        const PORT = process.env.PORT || 5000;
 
         await mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true });
 
@@ -33,7 +33,7 @@ const MongoStore = require("connect-mongo");
             store: MongoStore.create({
                 client: mongoose.connection.getClient(),
                 collection: 'session',
-                ttl: parseInt(process.env.SESS_LIFETIME) / 1000
+                ttl: parseInt(process.env.SESS_LIFETIME) / 1000,
             }),
             cookie: {
                 sameSite: true,
@@ -43,6 +43,7 @@ const MongoStore = require("connect-mongo");
         }));
 
         app.use("/api/user/", routes.userRoutes);
+        app.use("/api/session/", routes.sessionRoutes);
 
         const server = require("http").createServer(app);
 

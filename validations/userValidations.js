@@ -11,7 +11,7 @@ const message = 'must be between 6-16 characters, ' +
 const password = Joi.string()
     .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/)
     .messages({
-        "string.pattern,base": message
+        "string.pattern.base": message
     });
 
 const signUp = Joi.object().keys({
