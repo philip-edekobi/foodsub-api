@@ -14,14 +14,14 @@ const UserSchema = new Schema({
             message: "Email already exists"
         } 
     },
-    phoneNumber: { 
-        type: String, 
-        required: true,
-        validate: {
-            validator: number => User.doesNotExist({ phoneNumber: number }),
-            message: "Number already exists"
-        } 
-    },
+    // phoneNumber: { 
+    //     type: String, 
+    //     required: true,
+    //     validate: {
+    //         validator: number => User.doesNotExist({ phoneNumber: number }),
+    //         message: "Number already exists"
+    //     } 
+    // },
     password: { 
         type: String, 
         required: true 
@@ -42,6 +42,6 @@ UserSchema.methods.comparePasswords = function (password) {
     return compareSync(password, this.password);
 };
 
-const User = model(UserSchema);
+const User = model("User", UserSchema);
 
 module.exports = User;
