@@ -3,7 +3,7 @@ const parseError = err => {
     return JSON.stringify(err, Object.getOwnPropertyNames(err));
 };
 const sessionizeUser = user => {
-    return { userId: user.id, username: user.name };
+    return { userId: user.id, name: user.name };
 }  
 
 module.exports = {

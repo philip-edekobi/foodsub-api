@@ -11,12 +11,12 @@ userRoutes.post("", async (req, res) => {
         await signUp.validate({ name, email, password });
 
         const newUser = new User({ name, email, password });
-        const sessionUser = sessionizeUser(newUser);
         await newUser.save();
         
+        const sessionUser = sessionizeUser(newUser);
         req.session.user = sessionUser;
+        req.session.save();
         res.send(sessionUser);
-        console.log(sessionUser);
     } catch (err) {
         res.status(400).send(parseError(err));  
     }

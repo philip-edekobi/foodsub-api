@@ -5,7 +5,7 @@ const { parseError, sessionizeUser } = require("../utils");
 
 const sessionRouter = Router();
 
-sessionRouter.post("", async (req, res) => {
+sessionRouter.post("/login/", async (req, res) => {
     try{
         const { email, password } = req.body;
         await signIn.validate({ email, password });
@@ -14,9 +14,8 @@ sessionRouter.post("", async (req, res) => {
         if (user && user.comparePasswords(password)) {
             const sessionUser = sessionizeUser(user);
 
-            req.session = {...req.session, user: sessionUser};
-            console.log(req.session);
-            res.send(sessionUser);
+            req.session.user = sessionUser;
+            res.status(201).send(sessionUser);
         } else {
             throw new Error('Invalid login credentials');
         }
@@ -35,15 +34,24 @@ sessionRouter.delete("", async ({ session }, res) => {
                 res.clearCookie(process.env.SESS_NAME);
                 res.send(user);
             });
+        } else {
+            throw new Error("No active user")
         }
     } catch(err){
-        res.status(422).send(parseError(err));
+        res.status(404).send(parseError(err));
     }
 });
 
-sessionRouter.get("", ({ session }, res) => {
-    console.log(session);
-    res.send({ user: session.user });
+sessionRouter.get("/active/", ({ session }, res) => {
+    try{
+        const { user } = session;
+        console.log(session);
+
+        if(user) res.send({ user });
+        else throw new Error("No active user");
+    }catch(err){
+        res.status(404).send(parseError(err));
+    }
 });
 
 module.exports = sessionRouter;
