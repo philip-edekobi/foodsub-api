@@ -7,10 +7,10 @@ const userRoutes = Router();
 
 userRoutes.post("", async (req, res) => {
     try {
-        const { name, email, password } = req.body;
-        await signUp.validate({ name, email, password });
+        const { name, email, phoneNumber } = req.body;
+        await signUp.validate({ name, email, phoneNumber });
 
-        const newUser = new User({ name, email, password });
+        const newUser = new User({ name, email, phoneNumber });
         await newUser.save();
         
         const sessionUser = sessionizeUser(newUser);

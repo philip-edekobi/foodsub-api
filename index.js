@@ -43,6 +43,7 @@ const MongoStore = require("connect-mongodb-session")(session);
 
         app.use("/api/user/", routes.userRoutes);
         app.use("/api/session/", routes.sessionRoutes);
+        app.use("/api/sms/", routes.verifyRoutes);
 
         const server = require("http").createServer(app);
 
