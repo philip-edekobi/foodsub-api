@@ -1,4 +1,4 @@
-import axios from "axios";
+const axios = require("axios");
 
 const { SMS_URL, SMS_API_KEY } = process.env;
 
