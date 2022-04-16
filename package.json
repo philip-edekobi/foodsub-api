@@ -30,7 +30,8 @@
     "express-session": "^1.17.2",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.2.9"
+    "mongoose": "^6.2.9",
+    "twilio": "^3.76.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

@@ -1,6 +1,8 @@
 const axios = require("axios");
 
-const { SMS_URL, SMS_API_KEY } = process.env;
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountSid, authToken);
 
 const parseError = err => {
     if (err.isJoi) return err.details[0];
@@ -11,16 +13,21 @@ const sessionizeUser = user => {
 }  
 
 const sendSms = async (number, pin) => {
-    const message = `Dear customer, your verification pin is ${pin}.`;
-    const url = SMS_URL += `?action=send-sms&api_key=${SMS_API_KEY}&to=${number}&from=FoodSub&sms=${message}`;
-    const response = await axios.post(url);
+    const text = `Dear customer, your verification pin is ${pin}.`;
 
-    const data =  await response.data;
-    return data;
+    let messageResp;
+    client.messages
+        .create({
+            body: text,
+            from: '+19032736263',
+            to: number
+        })
+        .then(message => messageResp = message.sid);
+    return messageResp;
 }
 
 module.exports = {
     parseError,
     sessionizeUser,
-    sendSms
+    sendSms,
 }
