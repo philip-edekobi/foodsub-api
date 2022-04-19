@@ -20,10 +20,12 @@ const MongoStore = require("connect-mongodb-session")(session);
         app.enable("trust proxy")
 
         app.use(cors({
-            preflightContinue: true,
-            origin: "*"
+            preflightContinue: false,
+            origin: "*",
+            optionsSuccessStatus: 204
         }));
 
+        //app.options(cors());
         app.use(express.urlencoded({ extended: true }));
         app.use(express.json());
         app.use(cookieParser());
