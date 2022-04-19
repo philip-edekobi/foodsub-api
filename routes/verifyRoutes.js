@@ -25,8 +25,8 @@
     verifyRoutes.post("/verify", async (req, res) => {
         try{
             const { phoneNumber, code } = req.body;
-            if(code == req.session.pin){
-                let user = User.findOne({ phoneNumber });
+            if(code === req.session.pin){
+                let user = await User.findOne({ phoneNumber });
                 if(user){
                     const sessionUser = sessionizeUser(user);
 

@@ -1,8 +1,7 @@
-const axios = require("axios");
+require("dotenv").config();
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = require('twilio')(accountSid, authToken);
+const axios = require("axios");
+const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 const parseError = err => {
     if (err.isJoi) return err.details[0];
@@ -22,7 +21,8 @@ const sendSms = async (number, pin) => {
             from: '+19032736263',
             to: number
         })
-        .then(message => messageResp = message.sid);
+        .then(message => messageResp = message.sid)
+        .catch(err => console.error(parseError(err)));
     return messageResp;
 }
 
