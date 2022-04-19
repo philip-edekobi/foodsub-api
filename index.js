@@ -17,18 +17,18 @@ const MongoStore = require("connect-mongodb-session")(session);
         const app = express();
 
         app.disable('x-powered-by');
-        app.set("trust proxy", 1)
 
         app.use(cors({
             preflightContinue: false,
             origin: "*",
             optionsSuccessStatus: 204
         }));
-
-        //app.options(cors());
+        
         app.use(express.urlencoded({ extended: true }));
         app.use(express.json());
         app.use(cookieParser());
+
+        app.set('trust proxy', 1)
         app.use(session({
             name: process.env.SESS_NAME,
             secret: process.env.SESS_SECRET,
@@ -40,7 +40,7 @@ const MongoStore = require("connect-mongodb-session")(session);
             }),
             cookie: {
                 sameSite: 'none',
-                secure: process.env.NODE_ENV === 'production',
+                secure: !!(process.env.NODE_ENV === 'production'),
                 maxAge: parseInt(process.env.SESS_LIFETIME)
             }
         }));
