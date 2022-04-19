@@ -17,6 +17,7 @@ const MongoStore = require("connect-mongodb-session")(session);
         const app = express();
 
         app.disable('x-powered-by');
+        app.enable("trust proxy")
 
         app.use(cors({
             preflightContinue: true,
