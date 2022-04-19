@@ -36,7 +36,7 @@ const MongoStore = require("connect-mongodb-session")(session);
                 uri: process.env.MONGO_URL
             }),
             cookie: {
-                sameSite: true,
+                sameSite: 'none',
                 secure: process.env.NODE_ENV === 'production',
                 maxAge: parseInt(process.env.SESS_LIFETIME)
             }
