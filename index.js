@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const cookieParser = require('cookie-parser');
 const routes = require("./routes");
 const mongoose = require('mongoose');
@@ -48,6 +49,11 @@ const MongoStore = require("connect-mongodb-session")(session);
         app.use("/api/user/", routes.userRoutes);
         app.use("/api/session/", routes.sessionRoutes);
         app.use("/api/sms/", routes.verifyRoutes);
+
+        app.use(express.static(path.join(__dirname, "client", "build")));
+        app.get("*", (req, res) => {
+            res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+        });
 
         const server = require("http").createServer(app);
 
