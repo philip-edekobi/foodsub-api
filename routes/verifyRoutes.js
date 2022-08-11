@@ -31,6 +31,7 @@
                     const sessionUser = sessionizeUser(user);
 
                     req.session.user = sessionUser;
+                    req.session.save();
                     res.status(200).send(sessionUser);
                 } else {
                     res.status(200).send({ message: "proceed to sign up"});

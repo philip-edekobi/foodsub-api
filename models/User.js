@@ -3,15 +3,16 @@ const { Schema, model } = require("mongoose");
 const UserSchema = new Schema({
     name: { type: String},
     email: { 
-        type: String,  
+        type: String, 
+        unique: true 
+    },
+    password: {
+        type: String,
     },
     phoneNumber: { 
         type: String, 
         required: true,
-        validate: {
-            validator: number => User.doesNotExist({ phoneNumber: number }),
-            message: "Number already exists"
-        }  
+        unique: true,
     }
 }, {timestamps: true});
 

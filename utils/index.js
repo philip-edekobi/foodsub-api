@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const axios = require("axios");
+const bcrypt = require("bcrypt");
 const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 const parseError = err => {
@@ -26,8 +27,14 @@ const sendSms = async (number, pin) => {
     return messageResp;
 }
 
+const hash = password => bcrypt.hashSync(password, 12);
+
+const compare = (password, hashVal) => bcrypt.compareSync(password, hashVal);
+
 module.exports = {
     parseError,
     sessionizeUser,
     sendSms,
+    hash,
+    compare
 }

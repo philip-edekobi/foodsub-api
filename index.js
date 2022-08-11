@@ -13,7 +13,7 @@ const MongoStore = require("connect-mongodb-session")(session);
         require("dotenv").config();
         const PORT = process.env.PORT || 5000;
 
-        await mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true });
+        const connection = mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true });
 
         const app = express();
 
@@ -35,10 +35,7 @@ const MongoStore = require("connect-mongodb-session")(session);
             secret: process.env.SESS_SECRET,
             saveUninitialized: false,
             resave: false,
-            store: new MongoStore({
-                collection: 'session',
-                uri: process.env.MONGO_URL
-            }),
+            store: new MongoStore(connection),
             cookie: {
                 sameSite: 'none',
                 secure: !!(process.env.NODE_ENV === 'production'),

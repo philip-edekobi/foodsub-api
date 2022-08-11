@@ -2,7 +2,10 @@
     "cSpell.words": [
         "GETID",
         "msgtype",
+        "resave",
         "sendto",
+        "SESS",
+        "sessionize",
         "textmagic"
     ]
 }
