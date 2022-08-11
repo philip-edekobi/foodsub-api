@@ -5,6 +5,9 @@ const { parseError, sessionizeUser, hash } = require("../utils");
 
 const userRoutes = Router();
 
+/* @route POST /api/user
+ * Create user
+ */
 userRoutes.post("", async (req, res) => {
     try {
         const { name, email, phoneNumber, password } = req.body;
@@ -32,6 +35,26 @@ userRoutes.post("", async (req, res) => {
         res.send(sessionUser);
     } catch (err) {
         res.status(400).send(parseError(err));
+    }
+});
+
+/* @route PATCH /api/user
+ * Edit user details
+ */
+userRoutes.patch("", async ({ session: { user }, body }, res) => {
+    if (!user) throw new Error("No current user");
+
+    try {
+        const currentUser = await User.findById(user.userId);
+        for (let property in body) {
+            if (property in currentUser) {
+                currentUser[property] = body[property];
+            }
+        }
+        await currentUser.save();
+        res.status(206).send({ msg: "operation successful" });
+    } catch (err) {
+        res.status(500).send(parseError(err));
     }
 });
 
