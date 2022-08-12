@@ -1,16 +1,20 @@
 require("dotenv").config();
-
-const axios = require("axios");
 const bcrypt = require("bcrypt");
-const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+const fs = require("fs");
+const path = require("path");
+
+const client = require("twilio")(
+    process.env.TWILIO_ACCOUNT_SID,
+    process.env.TWILIO_AUTH_TOKEN
+);
 
 const parseError = err => {
     if (err.isJoi) return err.details[0];
-    return {error: err.message};
+    return { error: err.message };
 };
 const sessionizeUser = user => {
-    return { userId: user.id, name: user.name };
-}  
+    return { userId: user.id, name: user.name, role: user.role };
+};
 
 const sendSms = async (number, pin) => {
     const text = `Dear customer, your verification pin is ${pin}.`;
@@ -19,22 +23,40 @@ const sendSms = async (number, pin) => {
     client.messages
         .create({
             body: text,
-            from: '+19032736263',
-            to: number
+            from: "+19032736263",
+            to: number,
         })
-        .then(message => messageResp = message.sid)
+        .then(message => (messageResp = message.sid))
         .catch(err => console.error(parseError(err)));
     return messageResp;
-}
+};
 
 const hash = password => bcrypt.hashSync(password, 12);
 
 const compare = (password, hashVal) => bcrypt.compareSync(password, hashVal);
+
+const log = async error => {
+    const msg = 
+    `
+    [${new Date().toISOString()}] --- ${error.message}
+
+    ${error.stack ? error.stack : ""}
+
+
+    `;
+
+    const dir =`${__dirname}${path.sep}..${path.sep}logs${path.sep}error-logs.txt`;
+
+    fs.appendFile(dir, msg, (err) => {
+        return null;
+    });
+};
 
 module.exports = {
     parseError,
     sessionizeUser,
     sendSms,
     hash,
-    compare
-}
+    compare,
+    log,
+};
