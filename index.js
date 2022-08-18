@@ -52,7 +52,7 @@ const { log } = require("./utils");
         app.use("/api/v1/user/", routes.userRoutes);
         app.use("/api/v1/session/", routes.sessionRoutes);
         app.use("/api/v1/sms/", routes.verifyRoutes);
-        app.use("/api/v1/admin", routes.adminRoutes);
+        app.use("/api/v1/admin/", routes.adminRoutes);
 
         app.use(express.static(path.join(__dirname, "client", "build")));
         app.get("*", (req, res) => {

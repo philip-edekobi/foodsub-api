@@ -5,4 +5,6 @@ const { parseError, sessionizeUser, hash } = require("../utils");
 
 const adminRoutes = Router();
 
+adminRoutes.post("meal", async (req, res) => {});
+
 module.exports = adminRoutes;
