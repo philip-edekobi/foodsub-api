@@ -5,7 +5,7 @@ const { parseError, sessionizeUser, compare } = require("../utils");
 
 const sessionRouter = Router();
 
-/* @route GET /api/session
+/* @route GET /api/v1/session
  * Get current session
  */
 sessionRouter.get("", ({ session }, res) => {
@@ -19,18 +19,21 @@ sessionRouter.get("", ({ session }, res) => {
     }
 });
 
-/* @route POST /api/session
+/* @route POST /api/v1/session
  * Log In
  */
 sessionRouter.post("", async ({ session, body: { email, password } }, res) => {
     try {
         if (!(email && password)) throw new Error("Email or password missing");
-        
+
+        signIn.validate({ email, password });
+
         const user = await User.findOne({ email });
 
         if (!user) throw new Error("user does not exist");
 
-        if (!compare(password, user.password)) throw new Error("Incorrect password");
+        if (!compare(password, user.password))
+            throw new Error("Incorrect password");
 
         session.user = sessionizeUser(user);
         session.save();
@@ -40,7 +43,7 @@ sessionRouter.post("", async ({ session, body: { email, password } }, res) => {
     }
 });
 
-/* @route DELETE /api/session
+/* @route DELETE /api/v1/session
  * Log Out
  */
 sessionRouter.delete("", async ({ session }, res) => {

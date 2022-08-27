@@ -7,15 +7,20 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongodb-session")(session);
 const { log } = require("./utils");
+require("dotenv").config();
 
 (async () => {
     try {
-        require("dotenv").config();
         const PORT = process.env.PORT || 5000;
+        let connection;
 
-        const connection = mongoose.connect(process.env.MONGO_URL, {
-            useNewUrlParser: true,
-        });
+        try {
+            connection = mongoose.connect(process.env.MONGO_URL, {
+                useNewUrlParser: true,
+            });
+        } catch (err) {
+            throw err;
+        }
 
         const app = express();
 
@@ -53,11 +58,6 @@ const { log } = require("./utils");
         app.use("/api/v1/session/", routes.sessionRoutes);
         app.use("/api/v1/sms/", routes.verifyRoutes);
         app.use("/api/v1/admin/", routes.adminRoutes);
-
-        app.use(express.static(path.join(__dirname, "client", "build")));
-        app.get("*", (req, res) => {
-            res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-        });
 
         const server = require("http").createServer(app);
 

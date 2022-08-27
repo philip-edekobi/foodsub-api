@@ -5,7 +5,7 @@ const { parseError, sessionizeUser, hash } = require("../utils");
 
 const userRoutes = Router();
 
-/* @route POST /api/user
+/* @route POST /api/v1/user
  * Create user
  */
 userRoutes.post("", async (req, res) => {
@@ -38,7 +38,7 @@ userRoutes.post("", async (req, res) => {
     }
 });
 
-/* @route PATCH /api/user
+/* @route PATCH /api/v1/user
  * Edit user details
  */
 userRoutes.patch("", async ({ session: { user }, body }, res) => {

@@ -7,23 +7,29 @@ const mealSchema = new Schema(
             required: true,
             unique: true,
         },
-        categories: [{
-            type: Schema.Types.ObjectId,
+        price: {
+            type: Number,
             required: true,
-            ref: "Category",
-        }],
-        desc: {
+        },
+        category: {
+            type: String,
+        },
+        description: {
             type: String,
             required: true,
         },
-        cookingPreference: {
+        ingredients: {
+            type: [String],
+        },
+        image: {
+            type: Schema.Types.Buffer,
+            required: true,
+        },
+        /*cookingPreference: {
             type: String,
         },
         dailyValue: {
             type: String,
-        },
-        ingredients: {
-            type: [String],
         },
         extraAdditions: {
             type: [String],
@@ -35,7 +41,7 @@ const mealSchema = new Schema(
                     value: { type: String },
                 },
             ],
-        },
+        },*/
     },
     { timestamps: true }
 );
