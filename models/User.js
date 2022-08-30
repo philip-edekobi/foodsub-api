@@ -18,11 +18,6 @@ const userSchema = new Schema(
             required: true,
             unique: true,
         },
-        role: {
-            type: String,
-            enum: ["ADMIN", "NORMAL", "SERVICE PROVIDER"],
-            default: "NORMAL",
-        },
         history: [
             {
                 type: Schema.Types.ObjectId,
@@ -53,7 +48,7 @@ const userSchema = new Schema(
                 cvv: { type: String }, //hashed
                 cardNo: { type: String },
             },
-        ]
+        ],
     },
     { timestamps: true }
 );

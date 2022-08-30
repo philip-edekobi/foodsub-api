@@ -5,7 +5,7 @@ module.exports = {
         if (role === "ADMIN") {
             return next();
         }
-        return res.status(403).json({
+        return res.status(401).json({
             msg: "you do not have access to this protected url endpoint",
         });
     },
@@ -16,7 +16,7 @@ module.exports = {
         if (role === "SERVICE PROVIDER") {
             return next();
         }
-        return res.status(403).json({
+        return res.status(401).json({
             msg: "you do not have access to this protected url endpoint",
         });
     },
