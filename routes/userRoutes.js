@@ -11,15 +11,15 @@ const userRoutes = Router();
 userRoutes.post("", async (req, res) => {
     try {
         const { name, email, phoneNumber, password } = req.body;
-        if (!(name && email && phoneNumber && password))
-            throw new Error(
-                "name, password, email and phone number are required"
-            );
+        if (!(name && email && phoneNumber && password)) {
+            return res.status(400).json({ err: "incomplete fields" });
+        }
         signUp.validate({ name, email, phoneNumber });
 
         const existingUser = await User.findOne({ phoneNumber, email });
 
-        if (existingUser) throw new Error("User already exists");
+        if (existingUser)
+            return res.status(409).json({ err: "User already exists" });
 
         const newUser = new User({
             name,
@@ -34,7 +34,7 @@ userRoutes.post("", async (req, res) => {
         req.session.save();
         res.send(sessionUser);
     } catch (err) {
-        res.status(400).send(parseError(err));
+        res.status(500).send(parseError(err));
     }
 });
 
@@ -42,7 +42,11 @@ userRoutes.post("", async (req, res) => {
  * Edit user details
  */
 userRoutes.patch("", async ({ session: { user }, body }, res) => {
-    if (!user) throw new Error("No current user");
+    if (!user) {
+        return res
+            .status(401)
+            .json({ err: "you do not have access to this url endpoint" });
+    }
 
     try {
         const currentUser = await User.findById(user.userId);

@@ -1,23 +1,25 @@
 module.exports = {
     admin: async (req, res, next) => {
-        const role = req.session.user.role;
+        const { user } = req.session;
 
-        if (role === "ADMIN") {
+        if (user && user.role === "ADMIN") {
+            req.admin = user;
             return next();
         }
         return res.status(401).json({
-            msg: "you do not have access to this protected url endpoint",
+            err: "you do not have access to this url endpoint",
         });
     },
 
     serviceProvider: async (req, res, next) => {
-        const role = req.session.user.role;
+        const { user } = req.session;
 
-        if (role === "SERVICE PROVIDER") {
+        if (user && user.role === "SERVICE PROVIDER") {
+            req.serviceProvider = user;
             return next();
         }
         return res.status(401).json({
-            msg: "you do not have access to this protected url endpoint",
+            err: "you do not have access to this url endpoint",
         });
     },
 };

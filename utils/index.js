@@ -12,8 +12,8 @@ const parseError = err => {
     if (err.isJoi) return err.details[0];
     return { error: err.message };
 };
-const sessionizeUser = user => {
-    return { userId: user.id, name: user.name, role: user.role };
+const sessionizeUser = (user, role) => {
+    return { id: user.id, name: user.name, role: role ?? undefined };
 };
 
 const sendSms = async (number, pin) => {
@@ -36,8 +36,7 @@ const hash = password => bcrypt.hashSync(password, 12);
 const compare = (password, hashVal) => bcrypt.compareSync(password, hashVal);
 
 const log = async error => {
-    const msg = 
-    `
+    const msg = `
     [${new Date().toISOString()}] --- ${error.message}
 
     ${error.stack ? error.stack : ""}
@@ -45,9 +44,9 @@ const log = async error => {
 
     `;
 
-    const dir =`${__dirname}${path.sep}..${path.sep}logs${path.sep}error-logs.txt`;
+    const dir = `${__dirname}${path.sep}..${path.sep}logs${path.sep}error-logs.txt`;
 
-    fs.appendFile(dir, msg, (err) => {
+    fs.appendFile(dir, msg, err => {
         return null;
     });
 };

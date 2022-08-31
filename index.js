@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 const cookieParser = require("cookie-parser");
 const routes = require("./routes");
 const mongoose = require("mongoose");
@@ -58,6 +57,7 @@ require("dotenv").config();
         app.use("/api/v1/session/", routes.sessionRoutes);
         app.use("/api/v1/sms/", routes.verifyRoutes);
         app.use("/api/v1/admin/", routes.adminRoutes);
+        app.use("/api/v1/meal", routes.mealRoutes);
 
         const server = require("http").createServer(app);
 

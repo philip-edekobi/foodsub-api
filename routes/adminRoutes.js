@@ -1,8 +1,7 @@
 const { Router } = require("express");
-const Meal = require("../models/Meal");
 const Admin = require("../models/Admin");
-const { signUp } = require("../validations/userValidations");
-const { parseError, hash, sessionizeUser } = require("../utils");
+const { signUp, signIn } = require("../validations/userValidations");
+const { parseError, hash, sessionizeUser, compare } = require("../utils");
 const { adminAuth } = require("../middleware");
 
 const adminRoutes = Router();
@@ -20,35 +19,84 @@ adminRoutes.post("", async (req, res) => {
             return res.status(409).json({ err: "admin already exists" });
         }
 
-        const admin = new Admin({});
+        const admin = new Admin({
+            name,
+            email,
+            password: hash(password),
+        });
+
+        await admin.save();
+
+        const sessionUser = sessionizeUser(admin, "ADMIN");
+        req.session.user = sessionUser;
+        req.session.save();
+        res.status(201).send(sessionUser);
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).send(parseError(error));
     }
 });
 
-/* @route POST /api/v1/admin/meal
- * Add Meal
+/* @route POST /api/v1/admin/login
+ * Log In as Admin
  */
-adminRoutes.post("/meal", adminAuth, async (req, res) => {
-    const { name, price, ingredients, description, category, img } = req.body;
-    try {
-        if (!(name && price && ingredients && description)) {
-            return res.status(400).json({ msg: "incomplete fields!" });
-        }
-        console.log(img ?? "no image");
+adminRoutes.post(
+    "/login",
+    async ({ session, body: { email, password } }, res) => {
+        try {
+            if (!(email && password)) {
+                return res
+                    .status(400)
+                    .json({ err: "email or password missing" });
+            }
 
-        const meal = new Meal({
-            name,
-            price,
-            ingredients,
-            description,
-            category: category ?? undefined,
-            image: img,
-        });
-        await meal.save();
-        res.status(201).json({ msg: "meal added successfully!" });
+            signIn.validate({ email });
+
+            const admin = await Admin.findOne({ email });
+
+            if (!admin) {
+                return res.status(404).json({ err: "admin does not exist" });
+            }
+
+            console.log(password, ":::", admin.password);
+
+            if (!compare(password, admin.password)) {
+                return res.status(400).json({ err: "Incorrect password" });
+            }
+
+            session.user = sessionizeUser(admin, "ADMIN");
+            session.save();
+            return res.status(200).send("login successful");
+        } catch (error) {
+            return res.status(500).send(parseError(error));
+        }
+    }
+);
+
+/* @route PATCH /api/v1/user
+ * Edit admin details
+ */
+adminRoutes.patch("", adminAuth, async ({ body, admin }, res) => {
+    try {
+        const currentAdmin = await Admin.findById(admin.id);
+        if (currentAdmin) {
+            for (let property in body) {
+                if (property in currentAdmin) {
+                    if (property === "password") {
+                        continue;
+                    }
+                    currentAdmin[property] = body[property];
+                }
+            }
+            currentAdmin.password = body.password
+                ? hash(body.password)
+                : currentAdmin.password;
+        } else {
+            return res.status(404).json({ err: "admin does not exist" });
+        }
+        await currentAdmin.save();
+        res.status(206).send({ msg: "operation successful" });
     } catch (err) {
-        res.status(500).json({ err: parseError(err) });
+        res.status(500).send(parseError(err));
     }
 });
 

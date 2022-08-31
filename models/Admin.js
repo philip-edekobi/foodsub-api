@@ -4,7 +4,6 @@ const adminSchema = new Schema({
     name: {
         type: String,
         required: true,
-        unique: true,
     },
     email: {
         type: String,
@@ -25,6 +24,9 @@ const adminSchema = new Schema({
     },
     profilePic: {
         type: Schema.Types.Buffer,
+    },
+    actions: {
+        type: [String],
     },
 });
 

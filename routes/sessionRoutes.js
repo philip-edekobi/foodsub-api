@@ -13,9 +13,9 @@ sessionRouter.get("", ({ session }, res) => {
         const { user } = session;
 
         if (user) res.send(user);
-        else throw new Error("No active user");
+        else return res.status(404).json({ err: "No active user" });
     } catch (err) {
-        res.status(404).send(parseError(err));
+        res.status(500).send(parseError(err));
     }
 });
 
@@ -24,16 +24,21 @@ sessionRouter.get("", ({ session }, res) => {
  */
 sessionRouter.post("", async ({ session, body: { email, password } }, res) => {
     try {
-        if (!(email && password)) throw new Error("Email or password missing");
+        if (!(email && password)) {
+            return res.status(400).json({ err: "email or password missing" });
+        }
 
-        signIn.validate({ email, password });
+        signIn.validate({ email });
 
         const user = await User.findOne({ email });
 
-        if (!user) throw new Error("user does not exist");
+        if (!user) {
+            return res.status(404).json({ err: "user does not exist" });
+        }
 
-        if (!compare(password, user.password))
-            throw new Error("Incorrect password");
+        if (!compare(password, user.password)) {
+            return res.status(400).json({ err: "Incorrect password" });
+        }
 
         session.user = sessionizeUser(user);
         session.save();
@@ -57,10 +62,10 @@ sessionRouter.delete("", async ({ session }, res) => {
                 res.status(200).send("logout completed");
             });
         } else {
-            throw new Error("No active user");
+            return res.status(404).json({ err: "No active user" });
         }
     } catch (err) {
-        res.status(404).send(parseError(err));
+        res.status(500).send(parseError(err));
     }
 });
 
