@@ -9,7 +9,6 @@ const mealRoutes = Router();
 /* @route POST /api/v1/meal
  * Add Meal
  */
-
 mealRoutes.post("", adminAuth, async (req, res) => {
     const { name, price, ingredients, description, category, img } = req.body;
     try {
@@ -43,6 +42,19 @@ mealRoutes.post("", adminAuth, async (req, res) => {
         res.status(201).json({ msg: "meal added successfully!" });
     } catch (err) {
         res.status(500).json({ err: parseError(err) });
+    }
+});
+
+/* @route POST /api/v1/meal
+ * Add Meal
+ */
+mealRoutes.delete("", adminAuth, async (req, res) => {
+    try {
+        const { name } = req.body;
+        await Meal.findOneAndDelete({ name });
+        return res.status(200).json({ msg: "success" });
+    } catch (error) {
+        return res.status(500).send(parseError(error));
     }
 });
 

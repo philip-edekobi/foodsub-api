@@ -57,8 +57,6 @@ adminRoutes.post(
                 return res.status(404).json({ err: "admin does not exist" });
             }
 
-            console.log(password, ":::", admin.password);
-
             if (!compare(password, admin.password)) {
                 return res.status(400).json({ err: "Incorrect password" });
             }
@@ -96,6 +94,23 @@ adminRoutes.patch("", adminAuth, async ({ body, admin }, res) => {
         await currentAdmin.save();
         res.status(206).send({ msg: "operation successful" });
     } catch (err) {
+        res.status(500).send(parseError(err));
+    }
+});
+
+/* @route DELETE /api/v1/admin/
+ * Delete Admin
+ */
+adminRoutes.delete("", adminAuth, async (req, res) => {
+    try {
+        const currentAdmin = await Admin.findById(req.admin.id);
+        if (currentAdmin) {
+            await Admin.findByIdAndDelete(req.admin.id);
+            res.status(200).send("success!");
+        } else {
+            return res.status(404).json({ err: "admin does not exist" });
+        }
+    } catch (error) {
         res.status(500).send(parseError(err));
     }
 });
