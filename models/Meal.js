@@ -25,6 +25,9 @@ const mealSchema = new Schema(
             type: Schema.Types.Buffer,
             required: true,
         },
+        discount: {
+            type: Number,
+        },
         /*cookingPreference: {
             type: String,
         },

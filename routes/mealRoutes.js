@@ -6,6 +6,18 @@ const { adminAuth } = require("../middleware");
 
 const mealRoutes = Router();
 
+/* @route GET /api/v1/meal
+ * Get Meals
+ */
+mealRoutes.get("", async (req, res) => {
+    try {
+        const meals = await Meal.find({});
+        return res.status(200).json({ meals });
+    } catch (error) {
+        return res.status(500).send(parseError(error));
+    }
+});
+
 /* @route POST /api/v1/meal
  * Add Meal
  */
