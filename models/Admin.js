@@ -27,6 +27,7 @@ const adminSchema = new Schema({
     },
     actions: {
         type: [String],
+        date: Date.now()
     },
 });
 
