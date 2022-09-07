@@ -1,4 +1,6 @@
+/* eslint-disable no-undef */
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const routes = require("./routes");
@@ -6,20 +8,19 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongodb-session")(session);
 const { log } = require("./utils");
-require("dotenv").config();
+
+require("dotenv").config({
+    path: path.resolve(__dirname, `${process.env.NODE_ENV ?? "dev"}.env`),
+});
 
 (async () => {
     try {
         const PORT = process.env.PORT || 5000;
         let connection;
 
-        try {
-            connection = mongoose.connect(process.env.MONGO_URL, {
-                useNewUrlParser: true,
-            });
-        } catch (err) {
-            throw err;
-        }
+        connection = mongoose.connect(process.env.MONGO_URL, {
+            useNewUrlParser: true,
+        });
 
         const app = express();
 

@@ -3,10 +3,10 @@ const bcrypt = require("bcrypt");
 const fs = require("fs");
 const path = require("path");
 
-const client = require("twilio")(
+/*const client = require("twilio")(
     process.env.TWILIO_ACCOUNT_SID,
     process.env.TWILIO_AUTH_TOKEN
-);
+);*/
 
 const parseError = err => {
     if (err.isJoi) return err.details[0];

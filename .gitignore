@@ -1,7 +1,4 @@
 node_modules
 
-.env
-.env.*
-
 error-logs.txt
 .gitignore
