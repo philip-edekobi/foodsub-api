@@ -9,7 +9,7 @@ const adminRoutes = Router();
 /* @route POST /api/v1/admin/
  * Create Admin
  */
-adminRoutes.post("", async (req, res) => {
+adminRoutes.post("/", async (req, res) => {
     const { name, email, password } = req.body;
     try {
         signUp.validate({ name, email });
@@ -73,7 +73,7 @@ adminRoutes.post(
 /* @route PATCH /api/v1/user
  * Edit admin details
  */
-adminRoutes.patch("", adminAuth, async ({ body, admin }, res) => {
+adminRoutes.patch("/", adminAuth, async ({ body, admin }, res) => {
     try {
         const currentAdmin = await Admin.findById(admin.id);
         if (currentAdmin) {
@@ -92,7 +92,7 @@ adminRoutes.patch("", adminAuth, async ({ body, admin }, res) => {
             return res.status(404).json({ err: "admin does not exist" });
         }
         await currentAdmin.save();
-        res.status(206).send({ msg: "operation successful" });
+        res.status(206).json({ msg: "operation successful" });
     } catch (err) {
         res.status(500).send(parseError(err));
     }

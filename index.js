@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongodb-session")(session);
 const { log } = require("./utils");
+require('./tasks/async-tasks')
 
 require("dotenv").config({
     path: path.resolve(__dirname, `${process.env.NODE_ENV ?? "dev"}.env`),
@@ -20,7 +21,7 @@ require("dotenv").config({
 
         connection = mongoose.connect(process.env.MONGO_URL, {
             useNewUrlParser: true,
-        });
+        }).then((res) => console.log('hi')).catch(err => console.log('nay'));
 
         const app = express();
 
@@ -59,6 +60,8 @@ require("dotenv").config({
         app.use("/api/v1/sms/", routes.verifyRoutes);
         app.use("/api/v1/admin/", routes.adminRoutes);
         app.use("/api/v1/meal", routes.mealRoutes);
+        app.use('/api/v1/subscription/', routes.subscriptionRoutes)
+        app.use('/api/v1/orders/', routes.orderRoutes)
 
         const server = require("http").createServer(app);
 

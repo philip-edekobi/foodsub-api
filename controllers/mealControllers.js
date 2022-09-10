@@ -2,7 +2,7 @@ const Meal = require('../models/Meal')
 const Admin = require("../models/Admin");
 const { parseError } = require("../utils");
 
-//Get ALl Meals from DB
+//Get All Meals from DB
 const getMeals = async (req, res) => {
     try {
         const meals = await Meal.find({});
@@ -29,6 +29,7 @@ const getMeal = async (req, res) => {
 
 const updateMeal = async (req, res) => {
     const {id} = req.params;
+    const body = req.body
 
     try {
         const meal = await Meal.findOne({_id: id});
