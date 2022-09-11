@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongodb-session")(session);
 const { log } = require("./utils");
-require('./tasks/async-tasks')
+require("./tasks/async-tasks");
 
 require("dotenv").config({
     path: path.resolve(__dirname, `${process.env.NODE_ENV ?? "dev"}.env`),
@@ -21,7 +21,11 @@ require("dotenv").config({
 
         connection = mongoose.connect(process.env.MONGO_URL, {
             useNewUrlParser: true,
-        }).then((res) => console.log('hi')).catch(err => console.log('nay'));
+        });
+        await connection.catch(err => {
+            throw err;
+        });
+        console.log("db connection successful");
 
         const app = express();
 
@@ -60,8 +64,8 @@ require("dotenv").config({
         app.use("/api/v1/sms/", routes.verifyRoutes);
         app.use("/api/v1/admin/", routes.adminRoutes);
         app.use("/api/v1/meal", routes.mealRoutes);
-        app.use('/api/v1/subscription/', routes.subscriptionRoutes)
-        app.use('/api/v1/orders/', routes.orderRoutes)
+        app.use("/api/v1/subscription/", routes.subscriptionRoutes);
+        app.use("/api/v1/orders/", routes.orderRoutes);
 
         const server = require("http").createServer(app);
 
@@ -69,9 +73,11 @@ require("dotenv").config({
             console.log(`server is running on port: ${PORT}`)
         );
     } catch (err) {
+        console.log(err.message);
         await log(err);
         console.log(
-            "Server crashed... Check log,error-logs.txt for more details"
+            "Server crashed... Check log/error-logs.txt for more details"
         );
+        process.exit(1);
     }
 })();

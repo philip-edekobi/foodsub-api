@@ -1,6 +1,6 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-const fs = require("fs");
+const fs = require("fs/promises");
 const path = require("path");
 
 /*const client = require("twilio")(
@@ -46,9 +46,7 @@ const log = async error => {
 
     const dir = `${__dirname}${path.sep}..${path.sep}logs${path.sep}error-logs.txt`;
 
-    fs.appendFile(dir, msg, err => {
-        return null;
-    });
+    await fs.appendFile(dir, msg);
 };
 
 module.exports = {
