@@ -26,7 +26,7 @@ const createUser = async (req, res) => {
         const sessionUser = sessionizeUser(newUser);
         req.session.user = sessionUser;
         req.session.save();
-        res.send(sessionUser);
+        res.status(201).json(sessionUser);
     } catch (err) {
         res.status(500).send(parseError(err));
     }

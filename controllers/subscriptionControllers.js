@@ -35,15 +35,6 @@ const updateSubscription = async (req, res) => {
     const {id} = req.params
     const body = req.body
 
-    const x = {name: 'foo', age: 12}
-    const y = {name: 'bar', age: 10}
-    for (let p in x){
-        if (p in y){
-            y[p] = x[p]
-        }
-        console.log(x, y);
-    }
-
     try {
         const sub = await Subscription.findById(id)
 
