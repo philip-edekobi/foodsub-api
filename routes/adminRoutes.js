@@ -10,7 +10,7 @@ const adminRoutes = Router();
  * Create Admin
  */
 adminRoutes.post("/", async (req, res) => {
-    const { name, email, password, phoneNumber } = req.body;
+    const { name, email, password } = req.body;
     try {
         signUp.validate({ name, email });
         const existingAdmin = await Admin.findOne({ email });
@@ -23,7 +23,6 @@ adminRoutes.post("/", async (req, res) => {
             name,
             email,
             password: hash(password),
-            phoneNumber,
         });
 
         await admin.save();

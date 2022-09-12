@@ -19,7 +19,7 @@ require("dotenv").config({
         const PORT = process.env.PORT || 5000;
         let connection;
 
-        connection = mongoose.connect(process.env.MONGO_URL, {
+        connection = mongoose.connect(process.env.MONGODB_ATLAS, {
             useNewUrlParser: true,
         });
         await connection.catch(err => {

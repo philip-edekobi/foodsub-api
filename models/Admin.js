@@ -20,7 +20,6 @@ const adminSchema = new Schema({
     },
     designation: {
         type: String,
-        default: "",
     },
     profilePic: {
         type: Schema.Types.Buffer,
