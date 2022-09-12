@@ -20,14 +20,14 @@ const adminSchema = new Schema({
     },
     designation: {
         type: String,
-        unique: true,
+        default: "",
     },
     profilePic: {
         type: Schema.Types.Buffer,
     },
     actions: {
         type: [String],
-        date: Date.now()
+        date: Date.now(),
     },
 });
 

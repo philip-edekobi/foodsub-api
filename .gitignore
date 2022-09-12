@@ -3,3 +3,5 @@ node_modules
 error-logs.txt
 .gitignore
 .env
+*.env
+*.env*

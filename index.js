@@ -11,7 +11,7 @@ const { log } = require("./utils");
 require("./tasks/async-tasks");
 
 require("dotenv").config({
-    path: path.resolve(__dirname, `${process.env.NODE_ENV ?? "dev"}.env`),
+    path: path.resolve(__dirname, `${process.env.NODE_ENV ? "" : ".dev"}.env`),
 });
 
 (async () => {

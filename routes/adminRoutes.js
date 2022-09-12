@@ -10,10 +10,10 @@ const adminRoutes = Router();
  * Create Admin
  */
 adminRoutes.post("/", async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, phoneNumber } = req.body;
     try {
         signUp.validate({ name, email });
-        const existingAdmin = await Admin.findOne({ name, email });
+        const existingAdmin = await Admin.findOne({ email });
 
         if (existingAdmin) {
             return res.status(409).json({ err: "admin already exists" });
@@ -23,6 +23,7 @@ adminRoutes.post("/", async (req, res) => {
             name,
             email,
             password: hash(password),
+            phoneNumber,
         });
 
         await admin.save();
