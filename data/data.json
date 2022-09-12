@@ -1,0 +1,34 @@
+{
+    "users" : [                
+        {
+            "name": "Kyle",
+            "email": "kyle@gmail.com",
+            "password": "secret",
+            "phoneNumber": "+2348011111111"
+        },
+        {
+            "name": "James",
+            "email": "james@gmail.com",
+            "password": "secret",
+            "phoneNumber": "+2348022222222"
+        },
+        {
+            "name": "Praise",
+            "email": "praise@gmail.com",
+            "password": "secret",
+            "phoneNumber": "+2348033333333"
+        },
+        {
+            "name": "Paul",
+            "email": "paul@gmail.com",
+            "password": "secret",
+            "phoneNumber": "+2348044444444"
+        },
+        {
+            "name": "Stacy",
+            "email": "stacy@gmail.com",
+            "password": "secret",
+            "phoneNumber": "+2348055555555"
+        }
+    ]
+}
