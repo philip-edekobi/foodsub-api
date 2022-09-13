@@ -76,7 +76,7 @@ require("dotenv").config({
         console.log(err.message);
         await log(err);
         console.log(
-            "Server crashed... Check log/error-logs.txt for more details"
+            "Server crashed... Check logs/error-logs.txt for more details"
         );
         process.exit(1);
     }
