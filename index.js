@@ -10,11 +10,11 @@ const MongoStore = require("connect-mongodb-session")(session);
 const { log } = require("./utils");
 require("./tasks/async-tasks");
 
-require("dotenv").config();
-
 require("dotenv").config({
     path: path.resolve(__dirname, `${process.env.NODE_ENV ? "" : ".dev"}.env`),
 });
+
+console.log(process.env.NODE_ENV);
 
 (async () => {
     try {
@@ -28,6 +28,15 @@ require("dotenv").config({
             throw err;
         });
         console.log("db connection successful");
+
+        let store = new MongoStore({
+            uri: process.env.MONGODB_ATLAS,
+            collection: "sessions",
+        });
+
+        store.on("error", err => {
+            throw err;
+        });
 
         const app = express();
 
@@ -52,7 +61,7 @@ require("dotenv").config({
                 secret: process.env.SESS_SECRET,
                 saveUninitialized: false,
                 resave: false,
-                store: new MongoStore(connection),
+                store: store,
                 cookie: {
                     sameSite: "none",
                     secure: !!(process.env.NODE_ENV === "production"),
@@ -78,7 +87,7 @@ require("dotenv").config({
         console.log(err.message);
         await log(err);
         console.log(
-            "Server crashed... Check logs/error-logs.txt for more details"
+            "Server crashed... Check log/error-logs.txt for more details"
         );
         process.exit(1);
     }
