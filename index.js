@@ -10,6 +10,8 @@ const MongoStore = require("connect-mongodb-session")(session);
 const { log } = require("./utils");
 require("./tasks/async-tasks");
 
+require("dotenv").config();
+
 require("dotenv").config({
     path: path.resolve(__dirname, `${process.env.NODE_ENV ? "" : ".dev"}.env`),
 });
