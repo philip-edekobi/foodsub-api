@@ -42,9 +42,8 @@ require("dotenv").config({
 
         app.use(
             cors({
-                preflightContinue: false,
-                origin: "*",
-                optionsSuccessStatus: 204,
+                origin: ["http://localhost:3000", "http://127.0.0.1"],
+                credentials: true,
             })
         );
 
