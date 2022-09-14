@@ -47,7 +47,7 @@ const userSchema = new Schema(
             {
                 name: { type: String },
                 cvv: { type: String }, //hashed
-                cardNo: { type: String },
+                cardNo: { type: String }, //hashed
             },
         ],
     },

@@ -30,7 +30,7 @@ const createUser = async (req, res) => {
 
         const sessionUser = sessionizeUser(newUser);
         req.session.user = sessionUser;
-        req.session.cookie.maxAge = 31536000; //set cookie to expire in a year;
+        req.session.cookie.maxAge = 15768000000; //set cookie to expire in a year;
         req.session.save();
         res.status(201).json(sessionUser);
     } catch (err) {
