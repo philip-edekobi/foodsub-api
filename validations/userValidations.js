@@ -9,8 +9,9 @@ const phoneNumber = Joi.string().regex(
 );
 
 const signUp = Joi.object().keys({
-    email,
     name,
+    email,
+    phoneNumber,
 });
 
 const signIn = Joi.object().keys({

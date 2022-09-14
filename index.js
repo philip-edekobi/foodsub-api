@@ -14,8 +14,6 @@ require("dotenv").config({
     path: path.resolve(__dirname, `${process.env.NODE_ENV ? "" : ".dev"}.env`),
 });
 
-console.log(process.env.NODE_ENV);
-
 (async () => {
     try {
         const PORT = process.env.PORT || 5000;
@@ -62,6 +60,11 @@ console.log(process.env.NODE_ENV);
                 saveUninitialized: false,
                 resave: false,
                 store: store,
+                rolling: true,
+                /* the rolling property is used to make the cookie reset on every request.
+                 * i.e: instead of expiring after 2 hours, if a request is made after 1 hour,
+                 * the cookie expiry is now reset to 2 hours later instead of the remaining 1 hour
+                 */
                 cookie: {
                     sameSite: "none",
                     secure: !!(process.env.NODE_ENV === "production"),
@@ -84,7 +87,6 @@ console.log(process.env.NODE_ENV);
             console.log(`server is running on port: ${PORT}`)
         );
     } catch (err) {
-        console.log(err.message);
         await log(err);
         console.log(
             "Server crashed... Check log/error-logs.txt for more details"

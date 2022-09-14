@@ -4,7 +4,9 @@ const { parseError, sessionizeUser, hash } = require("../utils");
 
 const createUser = async (req, res) => {
     try {
-        const { name, email, phoneNumber, password } = req.body;
+        const { name, email, phoneNumber, password, state, lga, allergies } =
+            req.body;
+
         if (!(name && email && phoneNumber && password)) {
             return res.status(400).json({ err: "incomplete fields" });
         }
@@ -20,17 +22,21 @@ const createUser = async (req, res) => {
             email,
             phoneNumber,
             password: hash(password),
+            state,
+            lga,
+            allergies,
         });
         await newUser.save();
 
         const sessionUser = sessionizeUser(newUser);
         req.session.user = sessionUser;
+        req.session.cookie.maxAge = 31536000; //set cookie to expire in a year;
         req.session.save();
         res.status(201).json(sessionUser);
     } catch (err) {
         res.status(500).send(parseError(err));
     }
-}
+};
 
 const updateUser = async ({ session: { user }, body }, res) => {
     if (!user) {
@@ -51,6 +57,6 @@ const updateUser = async ({ session: { user }, body }, res) => {
     } catch (err) {
         res.status(500).send(parseError(err));
     }
-}
+};
 
-module.exports = {createUser, updateUser}
+module.exports = { createUser, updateUser };

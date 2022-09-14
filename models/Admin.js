@@ -15,7 +15,7 @@ const adminSchema = new Schema({
         required: true,
     },
     phoneNumber: {
-        type: Number,
+        type: String,
         unique: true,
     },
     designation: {
