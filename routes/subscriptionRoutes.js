@@ -1,10 +1,14 @@
-const { Router} = require('express');
-const {createSubscription, getSubscription, getSubscriptions, updateSubscription, deleteSubscription} = require('../controllers/subscriptionControllers')
+const { Router } = require("express");
+const {
+    createSubscription,
+    getSubscription,
+    getSubscriptions,
+    updateSubscription,
+} = require("../controllers/subscriptionControllers");
 
-const router = Router()
+const router = Router();
 
-router.route('/').get(getSubscriptions).post(createSubscription)
-router.route('/:id').get(getSubscription).patch(updateSubscription).delete(deleteSubscription)
+router.route("/").get(getSubscriptions).post(createSubscription);
+router.route("/:id").get(getSubscription).patch(updateSubscription);
 
-
-module.exports = router
+module.exports = router;

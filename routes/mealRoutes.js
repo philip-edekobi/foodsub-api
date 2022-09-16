@@ -3,7 +3,13 @@ const { adminAuth } = require("../middleware");
 
 const mealRoutes = Router();
 
-const {getMeals, createMeal, deleteMeal, getMeal, updateMeal} = require('../controllers/mealControllers');
+const {
+    getMeals,
+    createMeal,
+    deleteMeal,
+    getMeal,
+    updateMeal,
+} = require("../controllers/mealControllers");
 
 /* @route GET /api/v1/meal
  * Get Meals

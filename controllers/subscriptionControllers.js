@@ -1,58 +1,84 @@
-const Subscription = require("../models/Subscription")
+const Subscription = require("../models/Subscription");
+const Meal = require("../models/Meal");
 
 const createSubscription = async (req, res) => {
-    const {user, type, startDate, endDate, plans} = req.body
-    if (!user || !type || !startDate || !endDate) return res.status(400).json({err: 'incomplete fields'})
+    const user = req.session.user;
+
+    if (!user)
+        return res
+            .status(401)
+            .json({ err: "you don't have access to this url endpoint" });
+
+    const { type, endDate, plans } = req.body;
+    if (!type || !endDate)
+        return res.status(400).json({ err: "incomplete fields" });
 
     try {
-        const newSub = await Subscription.create({user, type, startDate, endDate, plans, type})
-        return res.status(200).json({newSub});
-    } catch (error) {
-        return res.status(500).json({err: 'something went wrong'})
-    }
-}
+        const newSub = await Subscription.create({
+            user: user.id,
+            type,
+            endDate,
+            plans,
+        });
 
-const getSubscriptions = async (req, res) => {
-    try {
-        const subs = await Subscription.find({})
-        return res.status(200).json({subs})
+        await newSub.save();
+        return res
+            .status(201)
+            .json({
+                id: newSub._id,
+                type,
+                startDate: newSub.startDate,
+                endDate,
+                plans,
+            });
     } catch (error) {
-        return res.status(500).json({err: 'something went wrong'})
+        console.log(error);
+        return res.status(500).json({ err: "something went wrong" });
     }
-}
+};
+
+const getSubscriptions = async (_, res) => {
+    try {
+        const subs = await Subscription.find({});
+        return res.status(200).json({ subs });
+    } catch (error) {
+        return res.status(500).json({ err: "something went wrong" });
+    }
+};
 
 const getSubscription = async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params;
+
     try {
-        const sub = await Subscription.findById(id)
-        return res.status(200).json({sub})
+        const sub = await Subscription.findById(id);
+        return res.status(200).json({ sub });
     } catch (error) {
-        return res.status(500).json({err: 'something went wrong'})
+        return res.status(500).json({ err: "something went wrong" });
     }
-}
+};
 
 const updateSubscription = async (req, res) => {
-    const {id} = req.params
-    const body = req.body
+    const { id } = req.params;
+    const body = req.body;
 
     try {
-        const sub = await Subscription.findById(id)
+        const sub = await Subscription.findById(id);
 
         for (let property in body) {
-            if (property in meal) {
-                meal[property] = body[property];
+            if (property in sub) {
+                sub[property] = body[property];
             }
         }
 
-        return res.status(200).json({sub})
+        return res.status(200).json({ sub });
     } catch (error) {
-        return res.status(500).json({err: 'something went wrong'})
+        return res.status(500).json({ err: "something went wrong" });
     }
-}
+};
 
-const deleteSubscription = async (req, res) => {
-    res.send('delete')
-}
-
-
-module.exports = {createSubscription, getSubscription, getSubscriptions, updateSubscription, deleteSubscription}
+module.exports = {
+    createSubscription,
+    getSubscription,
+    getSubscriptions,
+    updateSubscription,
+};

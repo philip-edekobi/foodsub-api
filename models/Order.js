@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const Meal = require("../models/Meal");
 
 const orderSchema = new Schema({
     subscriptionId: {
@@ -24,7 +25,7 @@ const orderSchema = new Schema({
             "delivered",
             "cancelled",
         ],
-        // 'new' wasnt passed as an enum because I would like to decide which order is new during the actual request
+        // 'new' wasn't passed as an enum because I would like to decide which order is new during the actual request
         // for instance /api/v1/order?new=true?date={Date.now} if Date.now is far greater than orderDate, then it isnt new
     },
 
@@ -38,13 +39,13 @@ const orderSchema = new Schema({
 
     hasExpired: {
         type: Boolean,
-        default: true,
+        default: false,
     },
 });
 
-orderSchema.pre("save", async function () {
-    const { price: cost } = await Meal.findOne({ _id: this.meal });
-    this.totalCost = cost + deliveryCost;
+orderSchema.pre("save", async function (next) {
+    const { price } = await Meal.findById(this.meal);
+    this.totalCost = price + this.deliveryCost;
 });
 
 const Order = model("order", orderSchema);

@@ -62,7 +62,8 @@ const updateMeal = async (req, res) => {
 // create meal
 
 const createMeal = async (req, res) => {
-    const { name, price, ingredients, description, category, img } = req.body;
+    const { name, price, ingredients, description, category, img, discount } =
+        req.body;
     try {
         if (!(name && price && ingredients && description)) {
             return res.status(400).json({ err: "incomplete fields!" });
@@ -81,6 +82,7 @@ const createMeal = async (req, res) => {
             description,
             category: category ?? undefined,
             image: img,
+            discount,
         });
         await meal.save();
 

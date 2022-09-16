@@ -12,8 +12,9 @@
 
 const Subscription = require("../models/Subscription");
 const Order = require("../models/Order");
+const Meal = require("../models/Meal");
 
-const interval = 60000; //milliseconds //60 seconds //this could change
+const interval = 30 * 60 * 1000; //milliseconds //60 seconds //this could change
 
 const dayOfWeekMap = [
     "Sunday",
@@ -27,57 +28,61 @@ const dayOfWeekMap = [
 
 const updateOrdersList = async () => {
     const currentDate = new Date(Date.now());
-    const todayDateinMS = Date.parse(currentDate.toString());
+    let todayDateinMS = new Date();
+    todayDateinMS.setHours(0, 0, 0, 0);
+    todayDateinMS = Date.parse(todayDateinMS);
     //I need today's date because that is what i use to query the orders to know if an order already exists for today
 
     const today = dayOfWeekMap[currentDate.getDay()]; //this tells if today is monday or tuesday...
 
     const subscriptions = await Subscription.find({});
 
-    subscriptions.forEach(async sub => {
+    subscriptions.forEach(async (sub) => {
         const { _id, plans, endDate } = sub;
         if (endDate - todayDateinMS <= 0) return; //if todays date is greater than the date the subscription is supposed to end, nothing happens.
 
         for (let day in plans) {
-            if (day == null) return; //if no plan is made for this day normally, nothing happens
             if (day !== today) continue; // if it isn't today, skip
+            if (plans[day].length < 1) return;
 
-            const order = Order.find({ subscriptionId: _id });
-            order
-                .where("deliveryTime")
-                .gt(todayDateinMS)
-                .lt(todayDateinMS + 86400000);
-            const result = await order;
-            console.log(result);
+            let orders = await Order.find({
+                subscriptionId: _id,
+            });
+
+            orders = orders.filter(
+                (order) =>
+                    Date.parse(order.deliveryTime) > todayDateinMS &&
+                    Date.parse(order.deliveryTime) < todayDateinMS + 86400000
+            );
 
             //the above query simply finds an order that may exist in the collection.
             //The query simply checks if the deliveryTime in the order document falls within today.
             //It might change in the future.
 
-            if (result) return; //if an order already exists i want to do nothing.
+            if (orders.length > 0) return; //if an order already exists i want to do nothing.
 
             //if it doesn't exist...
-            const { meal, deliveryTime } = plans[day];
-            //...then I want to create a new order based on details from the subscription.
-            const newOrder = await Order.create({
-                subscriptionId: _id,
-                deliveryTime,
-                meal,
-                deliveryCost: 1000,
-            });
 
-            await newOrder.save();
+            plans[day].forEach(async (plan) => {
+                const { meal: mealId, deliveryTime } = plan;
+                const meal = await Meal.findById(mealId);
+
+                const newOrder = new Order({
+                    subscriptionId: _id,
+                    deliveryTime: Date.parse(deliveryTime),
+                    meal,
+                    deliveryCost: 1000,
+                });
+
+                await newOrder.save();
+            });
         }
     });
 };
 
-const updateInterval = setInterval(() => {
-    updateOrdersList();
-}, interval);
-
-//I don't need to export anything in the file. However this file is required in the server's entry point (index.js)
-//Since it has been required, everything in the file will be run automatically.
-
-//I forgot to mention that when a user wants to change a meal for just a particular day, without changing the subscription details, that meal would simply be created as an order. This is why in the above code we check if an order already exists before creating a new one.
-
-//So boss philip what do you think.
+(function loop() {
+    setTimeout(async () => {
+        await updateOrdersList();
+        loop();
+    }, 3000);
+})();

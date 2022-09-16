@@ -39,6 +39,7 @@ const subscriptionSchema = new Schema(
 
         startDate: {
             type: Schema.Types.Date,
+            default: Date.now(),
         },
 
         endDate: {

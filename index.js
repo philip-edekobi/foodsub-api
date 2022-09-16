@@ -22,7 +22,7 @@ require("dotenv").config({
         connection = mongoose.connect(process.env.MONGODB_ATLAS, {
             useNewUrlParser: true,
         });
-        await connection.catch(err => {
+        await connection.catch((err) => {
             throw err;
         });
         console.log("db connection successful");
@@ -32,7 +32,7 @@ require("dotenv").config({
             collection: "sessions",
         });
 
-        store.on("error", err => {
+        store.on("error", (err) => {
             throw err;
         });
 
