@@ -7,6 +7,7 @@ const userSchema = new Schema(
         lga: { type: String },
         img: { type: String },
         bvn: { type: String },
+        isConfirmed: { type: Boolean, default: false },
         password: { type: String, required: true },
         allergies: { type: [String] },
         email: {

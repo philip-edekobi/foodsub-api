@@ -79,6 +79,7 @@ require("dotenv").config({
         app.use("/api/v1/meal", routes.mealRoutes);
         app.use("/api/v1/subscription/", routes.subscriptionRoutes);
         app.use("/api/v1/orders/", routes.orderRoutes);
+        app.use("/api/v1/email", routes.emailRoutes);
 
         const server = require("http").createServer(app);
 

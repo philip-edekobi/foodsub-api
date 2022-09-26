@@ -18,6 +18,7 @@
   "author": "Edekobi Philip",
   "license": "ISC",
   "dependencies": {
+    "amqplib": "^0.10.3",
     "axios": "^0.26.1",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
@@ -31,6 +32,7 @@
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.9",
+    "nodemailer": "^6.7.8",
     "twilio": "^3.76.1"
   },
   "devDependencies": {
