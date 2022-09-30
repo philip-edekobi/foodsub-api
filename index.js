@@ -84,8 +84,6 @@ require("dotenv").config({
 
         const server = require("http").createServer(app);
 
-        console.log(globalThis.queueInstance);
-
         server.listen(PORT, () =>
             console.log(`server is running on port: ${PORT}`)
         );

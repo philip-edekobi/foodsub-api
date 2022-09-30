@@ -14,4 +14,6 @@ const transport = nodemailer.createTransport({
 
 const queue = new EmailQueue(transport);
 
+(async () => await queue.init())();
+
 globalThis.queueInstance = queue;

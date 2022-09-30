@@ -57,7 +57,14 @@ const sendSms = async (number, pin) => {
 };
 
 const sendMail = async (email, pin) => {
-    console.log(`email is ${email} and pin is ${pin}`);
+    const mailObj = {
+        from: "foodsubscribtionforafrica@gmail.com",
+        to: email,
+        subject: "Verify your account",
+        text: `Dear new customer, your pin is ${pin}`,
+    };
+    await globalThis.queueInstance.addMail(mailObj);
+    console.log(`sent email is ${email} and pin is ${pin}`);
 };
 
 module.exports = {
