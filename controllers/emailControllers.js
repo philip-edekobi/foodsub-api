@@ -59,6 +59,7 @@ const verifyCode = async (req, res) => {
         if (code === req.session.pin) {
             currentUser.isConfirmed = true;
             await currentUser.save();
+            req.session.pin = null;
 
             return res.status(200).send("success!");
         }

@@ -1,8 +1,8 @@
-const amqp = require("amqplib");
+/*const amqp = require("amqplib");
 
 /**
  * @var {Promise<MessageBroker>}
- */
+ *
 
 let instance;
 
@@ -24,13 +24,41 @@ class EmailQueue {
     }
 }
 
+module.exports = EmailQueue;*/
+
+const amqp = require("amqplib");
+
+require("dotenv").config();
+
+/**
+ * @var {Promise<MessageBroker>}
+ */
+
+let instance;
+
+class EmailQueue {
+    constructor(transport) {
+        this.transportObject = transport;
+    }
+
+    async init() {
+        this.connection = await amqp.connect(process.env.RABBITMQ_URL);
+        this.channel = await this.connection.createChannel();
+        return this;
+    }
+
+    async addMail(mailOpts) {}
+}
+
 /**
  *  @return { Promise<EmailQueue> } // making type inference easier
  */
+
 EmailQueue.getInstance = async function () {
-    if (!instance) {
+    if (!(typeof instance !== EmailQueue)) {
         const queue = new EmailQueue();
         instance = queue.init();
+        console.log("lmao");
     }
     return instance;
 };

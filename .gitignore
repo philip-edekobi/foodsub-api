@@ -3,9 +3,7 @@ node_modules
 error-logs.txt
 .gitignore
 .env
-<<<<<<< HEAD
 *.env
 *.env*
-=======
+
 dev.env
->>>>>>> d609f18f25fe661729d378be8efccc6e249c2a61

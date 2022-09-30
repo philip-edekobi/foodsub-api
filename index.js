@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+require("./email");
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
@@ -82,6 +83,8 @@ require("dotenv").config({
         app.use("/api/v1/email", routes.emailRoutes);
 
         const server = require("http").createServer(app);
+
+        console.log(globalThis.queueInstance);
 
         server.listen(PORT, () =>
             console.log(`server is running on port: ${PORT}`)
