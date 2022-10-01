@@ -1,31 +1,3 @@
-/*const amqp = require("amqplib");
-
-/**
- * @var {Promise<MessageBroker>}
- *
-
-let instance;
-
-class EmailQueue {
-    // create a connection to rabbitmq
-
-    async init() {
-        this.connection = await amqp.connect(process.env.RABBITMQ_URL);
-        this.channel = await this.connection.createChannel();
-        return this;
-    }
-
-    async send(queue, msg) {
-        if (!this.connection) {
-            await this.init();
-        }
-        await this.channel.assertQueue(queue, { durable: true });
-        this.channel.sendToQueue(queue, msg);
-    }
-}
-
-module.exports = EmailQueue;*/
-
 const amqp = require("amqplib");
 const path = require("path");
 
@@ -36,10 +8,6 @@ require("dotenv").config({
         `${process.env.NODE_ENV ? "" : ".dev"}.env`
     ),
 });
-
-/**
- * @var {Promise<MessageBroker>}
- */
 
 class EmailQueue {
     constructor(transport) {
@@ -65,9 +33,5 @@ class EmailQueue {
         });
     }
 }
-
-/**
- *  @return { Promise<EmailQueue> } // making type inference easier
- */
 
 module.exports = EmailQueue;

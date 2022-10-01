@@ -1,7 +1,8 @@
-require("dotenv").config();
 const bcrypt = require("bcrypt");
 const fs = require("fs/promises");
 const path = require("path");
+
+require("dotenv").config();
 
 /*const client = require("twilio")(
     process.env.TWILIO_ACCOUNT_SID,
