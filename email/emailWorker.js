@@ -11,23 +11,24 @@ require("dotenv").config({
 
 const emailTransport = globalThis.queueInstance.transportObject;
 
-const runQueue = () => {
-    amqp.connect(process.env.RABBITMQ_URL, function (error0, connection) {
-        if (error0) {
-            throw error0;
+amqp.connect(process.env.RABBITMQ_URL, function (error0, connection) {
+    console.log("trying amqp");
+    if (error0) {
+        throw error0;
+    }
+    connection.createChannel(function (error1, channel) {
+        if (error1) {
+            throw error1;
         }
-        connection.createChannel(function (error1, channel) {
-            if (error1) {
-                throw error1;
-            }
-            let queue = "email";
+        let queue = "email";
 
-            channel.assertQueue(queue, {
-                durable: true,
-            });
+        channel.assertQueue(queue, {
+            durable: true,
+        });
 
-            channel.prefetch(1);
+        channel.prefetch(1);
 
+        function runQueue() {
             channel.consume(
                 queue,
                 function (msg) {
@@ -43,13 +44,13 @@ const runQueue = () => {
                     noAck: false,
                 }
             );
-        });
-    });
-};
+        }
 
-(function loop() {
-    setTimeout(() => {
-        runQueue();
-        loop();
-    }, 3000);
-})();
+        (function loop() {
+            setTimeout(() => {
+                runQueue();
+                loop();
+            }, 3000);
+        })();
+    });
+});
