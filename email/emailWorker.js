@@ -33,7 +33,11 @@ const runQueue = () => {
                 function (msg) {
                     let jsonStr = msg.content.toString();
                     emailTransport.sendMail(JSON.parse(jsonStr));
-                    console.log("Sent");
+
+                    setTimeout(function () {
+                        channel.ack(msg);
+                        console.log("Sent");
+                    }, 1500);
                 },
                 {
                     noAck: false,
