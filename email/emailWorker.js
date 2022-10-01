@@ -12,7 +12,6 @@ require("dotenv").config({
 const emailTransport = globalThis.queueInstance.transportObject;
 
 amqp.connect(process.env.RABBITMQ_URL, function (error0, connection) {
-    console.log("trying amqp");
     if (error0) {
         throw error0;
     }
