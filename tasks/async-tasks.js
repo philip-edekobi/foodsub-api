@@ -10,7 +10,7 @@
 //If there is then it looks through orders to see if a user made any change for that particular day. If not it creates a new order based on the details gotten from the subscription
 //Please check my comments in case there is something you don't understand.
 
-console.log("running async script");
+console.log("running async script...");
 
 const Subscription = require("../models/Subscription");
 const Order = require("../models/Order");
@@ -63,7 +63,7 @@ const updateOrdersList = async () => {
 
             //if it doesn't exist...
 
-            console.log("makings");
+            console.log("making orders...");
             plans[day].forEach(async (plan) => {
                 const deliveryTime = new Date().setHours(...plan.deliveryTime);
                 const { meal: mealId } = plan;

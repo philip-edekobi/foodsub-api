@@ -1,5 +1,6 @@
 const Subscription = require("../models/Subscription");
 const Meal = require("../models/Meal");
+const User = require("../models/User");
 
 const createSubscription = async (req, res) => {
     const user = req.session.user;
@@ -14,8 +15,8 @@ const createSubscription = async (req, res) => {
         return res.status(400).json({ err: "incomplete fields" });
 
     const existingSub = await Subscription.findById(user.subscription);
-    /*if (existingSub)
-        return res.status(400).json({ err: "user already subscribed" });*/
+    if (existingSub)
+        return res.status(400).json({ err: "user already subscribed" });
     try {
         const newSub = await Subscription.create({
             user: user.id,
@@ -25,6 +26,11 @@ const createSubscription = async (req, res) => {
         });
 
         await newSub.save();
+
+        const currentUser = await User.findById(user.id);
+        currentUser.subscription = newSub._id;
+        await currentUser.save();
+
         return res.status(201).json({
             id: newSub._id,
             type,

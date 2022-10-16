@@ -20,16 +20,14 @@ const userSchema = new Schema(
             required: true,
             unique: true,
         },
-        history: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: "Subscription",
-            },
-        ],
+        subscription: {
+            type: Schema.Types.ObjectId,
+            ref: "Subscription",
+        },
         cart: [
             {
                 type: Schema.Types.ObjectId,
-                ref: "Subscription",
+                ref: "Order",
             },
         ],
         resAddr: [
