@@ -16,6 +16,11 @@ const orderSchema = new Schema({
         type: Schema.Types.Date,
     },
 
+    deliveryMethod: {
+        type: String,
+        enum: ["pick up", "home delivery"],
+    },
+
     status: {
         type: String,
         enum: [
@@ -25,6 +30,7 @@ const orderSchema = new Schema({
             "delivered",
             "cancelled",
         ],
+        default: "accepted",
         // 'new' wasn't passed as an enum because I would like to decide which order is new during the actual request
         // for instance /api/v1/order?new=true?date={Date.now} if Date.now is far greater than orderDate, then it isnt new
     },

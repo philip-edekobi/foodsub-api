@@ -7,7 +7,7 @@ const plan = {
     },
 
     deliveryTime: {
-        type: Schema.Types.Date,
+        type: [Number],
     },
 
     deliveryMethod: {

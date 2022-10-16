@@ -13,6 +13,9 @@ const createSubscription = async (req, res) => {
     if (!type || !endDate)
         return res.status(400).json({ err: "incomplete fields" });
 
+    const existingSub = await Subscription.findById(user.subscription);
+    /*if (existingSub)
+        return res.status(400).json({ err: "user already subscribed" });*/
     try {
         const newSub = await Subscription.create({
             user: user.id,
@@ -22,15 +25,13 @@ const createSubscription = async (req, res) => {
         });
 
         await newSub.save();
-        return res
-            .status(201)
-            .json({
-                id: newSub._id,
-                type,
-                startDate: newSub.startDate,
-                endDate,
-                plans,
-            });
+        return res.status(201).json({
+            id: newSub._id,
+            type,
+            startDate: newSub.startDate,
+            endDate,
+            plans,
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ err: "something went wrong" });

@@ -10,11 +10,13 @@
 //If there is then it looks through orders to see if a user made any change for that particular day. If not it creates a new order based on the details gotten from the subscription
 //Please check my comments in case there is something you don't understand.
 
+console.log("running async script");
+
 const Subscription = require("../models/Subscription");
 const Order = require("../models/Order");
 const Meal = require("../models/Meal");
 
-const interval = 30 * 60 * 1000; //milliseconds //60 seconds //this could change
+const interval = 60 * 1000;
 
 const dayOfWeekMap = [
     "Sunday",
@@ -28,9 +30,7 @@ const dayOfWeekMap = [
 
 const updateOrdersList = async () => {
     const currentDate = new Date(Date.now());
-    let todayDateinMS = new Date();
-    todayDateinMS.setHours(0, 0, 0, 0);
-    todayDateinMS = Date.parse(todayDateinMS);
+    let todayDateinMS = new Date().setHours(0, 0, 0);
     //I need today's date because that is what i use to query the orders to know if an order already exists for today
 
     const today = dayOfWeekMap[currentDate.getDay()]; //this tells if today is monday or tuesday...
@@ -51,8 +51,8 @@ const updateOrdersList = async () => {
 
             orders = orders.filter(
                 (order) =>
-                    Date.parse(order.deliveryTime) > todayDateinMS &&
-                    Date.parse(order.deliveryTime) < todayDateinMS + 86400000
+                    order.deliveryTime.getTime() > todayDateinMS &&
+                    order.deliveryTime.getTime() < todayDateinMS + 86400000 //today + 24 hours
             );
 
             //the above query simply finds an order that may exist in the collection.
@@ -63,13 +63,15 @@ const updateOrdersList = async () => {
 
             //if it doesn't exist...
 
+            console.log("makings");
             plans[day].forEach(async (plan) => {
-                const { meal: mealId, deliveryTime } = plan;
+                const deliveryTime = new Date().setHours(...plan.deliveryTime);
+                const { meal: mealId } = plan;
                 const meal = await Meal.findById(mealId);
 
                 const newOrder = new Order({
                     subscriptionId: _id,
-                    deliveryTime: Date.parse(deliveryTime),
+                    deliveryTime,
                     meal,
                     deliveryCost: 1000,
                 });
@@ -84,5 +86,5 @@ const updateOrdersList = async () => {
     setTimeout(async () => {
         await updateOrdersList();
         loop();
-    }, 3000);
+    }, interval);
 })();
