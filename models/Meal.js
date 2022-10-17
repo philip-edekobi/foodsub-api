@@ -13,6 +13,7 @@ const mealSchema = new Schema(
         },
         category: {
             type: String,
+            enum: ["Premium Meals", "Discounted Meals", "Top Picks"],
         },
         description: {
             type: String,

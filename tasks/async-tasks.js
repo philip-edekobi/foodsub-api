@@ -65,13 +65,14 @@ const updateOrdersList = async () => {
 
             console.log("making orders...");
             plans[day].forEach(async (plan) => {
-                const deliveryTime = new Date().setHours(...plan.deliveryTime);
+                timeArr = adJustToNigerianTime(plan.deliveryTime);
+                const deliveryTime = new Date().setHours(...timeArr);
                 const { meal: mealId } = plan;
                 const meal = await Meal.findById(mealId);
 
                 const newOrder = new Order({
                     subscriptionId: _id,
-                    deliveryTime,
+                    deliveryTime: new Date(deliveryTime),
                     meal,
                     deliveryCost: 1000,
                 });
@@ -81,6 +82,13 @@ const updateOrdersList = async () => {
         }
     });
 };
+
+// this function is necessary to convert the time from the default GMT to nigerian time which is GMT + 1
+function adJustToNigerianTime(timeArr) {
+    resArr = timeArr;
+    resArr[0] = resArr[0] === 23 ? 0 : resArr[0] + 1;
+    return resArr;
+}
 
 (function loop() {
     setTimeout(async () => {
